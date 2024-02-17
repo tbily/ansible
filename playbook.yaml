@@ -1,0 +1,9 @@
+---
+
+
+- hosts: all
+  tasks:
+   - name: Install package
+     ansible.builtin.dnf:
+         name: net-tools
+         state: installed
