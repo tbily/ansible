@@ -1,0 +1,29 @@
+- name: Create a DigitalOcean droplet
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    do_token: "{{ lookup('env', 'DO_API_TOKEN') }}"  # Or you can hardcode your token (not recommended)
+    droplet_name: "ansible-test-droplet"
+    region: "fra1"
+    size: "s-1vcpu-1gb"
+    image: "ubuntu-22-04-x64"
+
+  tasks:
+    - name: Create droplet
+      community.digitalocean.digital_ocean_droplet:
+        oauth_token: "{{ do_token }}"
+        name: "{{ droplet_name }}"
+        region: "{{ region }}"
+        size: "{{ size }}"
+        image: "{{ image }}"
+        wait: yes
+        ssh_keys: ['29853961']  # You can add SSH key fingerprints here
+        unique_name: true
+        state: present
+      register: droplet
+
+    - name: Show droplet information
+      debug:
+        var: droplet.data
